@@ -216,3 +216,6 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+
+# Local TIAGo ROS Noetic simulation bundle (large generated/downloaded assets)
+noetic-tiago/
