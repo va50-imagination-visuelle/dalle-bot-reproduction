@@ -8,9 +8,12 @@ project(va50_robot_control)
 ## if COMPONENTS list like find_package(catkin REQUIRED COMPONENTS xyz)
 ## is used, also find other catkin packages
 find_package(catkin REQUIRED COMPONENTS
+  gazebo_msgs
   geometry_msgs
   moveit_commander
+  moveit_msgs
   rospy
+  tf
 )
 
 ## System dependencies are found with CMake's conventions
@@ -105,8 +108,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES va50_robot_control
-#  CATKIN_DEPENDS geometry_msgs moveit_commander rospy
-#  DEPENDS system_lib
+  CATKIN_DEPENDS gazebo_msgs geometry_msgs moveit_commander moveit_msgs rospy tf
 )
 
 ###########
@@ -163,6 +165,10 @@ include_directories(
 #   scripts/my_python_script
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
+catkin_install_python(PROGRAMS
+  script/plan_fork_pregrasp.py
+  DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+)
 
 ## Mark executables for installation
 ## See http://docs.ros.org/melodic/api/catkin/html/howto/format1/building_executables.html
