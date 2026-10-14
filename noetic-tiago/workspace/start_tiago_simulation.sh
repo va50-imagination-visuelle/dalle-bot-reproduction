@@ -3,6 +3,12 @@
 sudo cp ./src/va50/gripper.urdf.xacro /opt/pal/gallium/share/pal_gripper_description/urdf/
 sudo cp ./src/va50/sick_tim571_laser.gazebo.xacro /opt/pal/gallium/share/pmb2_description/urdf/sensors
 
+# Make the project's local Gazebo world and its model:// meshes resolvable.
+# Without these paths, Gazebo silently falls back to the similarly named
+# world shipped in tiago_gazebo, which does not contain our table setup.
+export GAZEBO_RESOURCE_PATH="${PWD}/src/va50:${GAZEBO_RESOURCE_PATH:-}"
+export GAZEBO_MODEL_PATH="${PWD}/src/va50/models:${GAZEBO_MODEL_PATH:-}"
+
 # ============================================================
 # Start TIAGo simulation
 # ============================================================
