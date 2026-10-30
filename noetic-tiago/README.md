@@ -19,13 +19,17 @@ Puis, dans le conteneur :
 ```bash
 cd /home/pal/ros_ws
 catkin_make -DCATKIN_ENABLE_TESTING=OFF -DDISABLE_PAL_FLAGS=ON
-source devel/setup.bash
+source /opt/pal/gallium/setup.bash
+source devel/setup.bash --extend
 ./start_tiago_simulation.sh
 ```
 
 La simulation ouvre Gazebo et RViz. Le script place TIAGo devant une table et
 positionne son bras au-dessus de celle-ci. La caméra RGB-D, la profondeur et les
 nuages de points peuvent être visualisés dans RViz.
+
+Pour envoyer une pose 3D à la pince avec MoveIt, consulter la
+[procédure de commande cartésienne](docs/robotique/commande_pose_3d_moveit.md).
 
 ## Persistance
 
