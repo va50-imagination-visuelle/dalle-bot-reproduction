@@ -115,9 +115,25 @@ Le test doit :
 4. mesurer la pose finale ;
 5. terminer avec `Cible atteinte dans les tolérances définies.`
 
-Les tolérances actuelles sont de 15 mm en position et 0,05 rad en orientation.
-RViz permet de contrôler visuellement la trajectoire et Gazebo le mouvement
-effectif du robot.
+Les seuils d'acceptation sont de 15 mm en position et 0,05 rad en orientation.
+Les tolérances demandées au planificateur sont volontairement plus strictes
+(5 mm et 0,02 rad par axe) afin de conserver une marge pour l'exécution. RViz
+permet de contrôler visuellement la trajectoire et Gazebo le mouvement effectif
+du robot.
+
+### Résultat de validation
+
+Le test a été rejoué dans Gazebo le 30 octobre 2026 depuis la pose initiale du
+projet avec la version installée par Catkin :
+
+```text
+Plan trouvé en 0.032 s; exécution...
+Erreurs finales : position 0.0053 m, orientation 0.0145 rad
+Cible atteinte dans les tolérances définies.
+```
+
+La trajectoire a donc été planifiée, exécutée par `arm_controller` et validée
+par une nouvelle lecture de la pose de `arm_tool_link`.
 
 ## Échecs attendus et diagnostic
 

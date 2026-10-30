@@ -14,6 +14,11 @@ TARGET_POSITION = (0.5611, -0.0640, 0.85775)
 TARGET_ORIENTATION = (-0.492542, 0.494445, 0.478248, 0.533110)
 POSITION_TOLERANCE = 0.015  # m
 ORIENTATION_TOLERANCE = 0.05  # rad
+# Keep the IK/planning target stricter than the final acceptance thresholds.
+# MoveIt applies orientation tolerances per axis, while pose_errors() measures
+# the total quaternion angle; using the same values leaves no execution margin.
+MOVEIT_POSITION_TOLERANCE = 0.005  # m
+MOVEIT_ORIENTATION_TOLERANCE = 0.02  # rad per constrained axis
 
 
 def pose_errors(actual, target):
@@ -47,8 +52,8 @@ def main():
     group = moveit_commander.MoveGroupCommander("arm")
     group.set_planning_time(10.0)
     group.set_num_planning_attempts(10)
-    group.set_goal_position_tolerance(POSITION_TOLERANCE)
-    group.set_goal_orientation_tolerance(ORIENTATION_TOLERANCE)
+    group.set_goal_position_tolerance(MOVEIT_POSITION_TOLERANCE)
+    group.set_goal_orientation_tolerance(MOVEIT_ORIENTATION_TOLERANCE)
 
     target = PoseStamped()
     target.header.frame_id = "base_footprint"

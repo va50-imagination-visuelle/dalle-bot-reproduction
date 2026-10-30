@@ -166,6 +166,7 @@ include_directories(
 #   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 # )
 catkin_install_python(PROGRAMS
+  script/move_to_pose.py
   script/plan_fork_pregrasp.py
   DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
 )
