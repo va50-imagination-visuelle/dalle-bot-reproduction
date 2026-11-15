@@ -1,0 +1,91 @@
+{
+  "image": "photos\\table5.jpeg",
+  "size": [
+    4032,
+    3024
+  ],
+  "context": "dinner table",
+  "edit_prompt": "Rearrange these objects into a neat dinner table setting: a plate, two forks, a knife, a spoon and a glass. Keep exactly the same objects, the same camera view and the same dinner table. Do not add or remove anything.",
+  "vlm_objects": {
+    "plate": 1,
+    "fork": 2,
+    "knife": 1,
+    "spoon": 1,
+    "glass": 1
+  },
+  "count_mismatch": {},
+  "objects": [
+    {
+      "id": "o1",
+      "name": "fork",
+      "score": 0.981,
+      "bbox_px": [
+        691,
+        303,
+        1395,
+        1199
+      ],
+      "mask": "out_pipeline\\table5\\masks\\o1_fork.png"
+    },
+    {
+      "id": "o2",
+      "name": "fork",
+      "score": 0.981,
+      "bbox_px": [
+        2636,
+        1856,
+        3510,
+        2755
+      ],
+      "mask": "out_pipeline\\table5\\masks\\o2_fork.png"
+    },
+    {
+      "id": "o3",
+      "name": "spoon",
+      "score": 0.979,
+      "bbox_px": [
+        2439,
+        1669,
+        3198,
+        2526
+      ],
+      "mask": "out_pipeline\\table5\\masks\\o3_spoon.png"
+    },
+    {
+      "id": "o4",
+      "name": "glass",
+      "score": 0.963,
+      "bbox_px": [
+        2454,
+        622,
+        3015,
+        1222
+      ],
+      "mask": "out_pipeline\\table5\\masks\\o4_glass.png"
+    },
+    {
+      "id": "o5",
+      "name": "plate",
+      "score": 0.962,
+      "bbox_px": [
+        1115,
+        988,
+        2549,
+        2414
+      ],
+      "mask": "out_pipeline\\table5\\masks\\o5_plate.png"
+    },
+    {
+      "id": "o6",
+      "name": "knife",
+      "score": 0.955,
+      "bbox_px": [
+        862,
+        452,
+        1580,
+        1329
+      ],
+      "mask": "out_pipeline\\table5\\masks\\o6_knife.png"
+    }
+  ]
+}
