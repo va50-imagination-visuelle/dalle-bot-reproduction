@@ -17,6 +17,16 @@ def model_prediction(model_choice, image_path, detection_element):
     return results
 
 
+def normalize_angle(angle):
+
+    if -90 <= angle <= 90:
+        return angle
+    elif angle > 90:
+        return angle - 180
+    else:
+        return angle + 180
+
+
 def find_angle(mask_object):
 
     vx, vy, x0, y0 = cv2.fitLine(mask_object, cv2.DIST_L2, 0, 0.01, 0.01)
@@ -24,21 +34,7 @@ def find_angle(mask_object):
     vx = vx.item()
     vy = vy.item()
 
-    base_angle = np.degrees(np.arctan2(abs(vy), abs(vx)))
-
-    if vx >= 0 and vy <= 0:
-        angle_deg = base_angle
-
-    elif vx >= 0 and vy > 0:
-        angle_deg = 180 - base_angle
-
-    elif vx < 0 and vy >= 0:
-        angle_deg = base_angle
-
-    else:  # vx < 0 et vy < 0
-        angle_deg = 180 - base_angle
-
-    return angle_deg
+    return normalize_angle(np.degrees(np.arctan2(vy, vx)))
 
 
 def find_center(bbox):
@@ -83,7 +79,7 @@ def drawing_openCv(image_path, centers, angles):
 
 if __name__ == "__main__":
 
-    image_path = "images/test_final.jpg"
+    image_path = "images/test_orientation.png"
     # define the model :
     results = model_prediction(
         model_choice="models/yoloe-26l-seg.pt",
