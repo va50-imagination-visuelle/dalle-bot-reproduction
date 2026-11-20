@@ -1,0 +1,23 @@
+{
+  "real_image": "images/table2.jpeg",
+  "size": [
+    4032,
+    3024
+  ],
+  "seed": 838632245,
+  "real_objects": {
+    "spoon": 1,
+    "plate": 1,
+    "fork": 1,
+    "knife": 1
+  },
+  "target_objects": {
+    "plate": 1,
+    "fork": 1,
+    "knife": 1,
+    "spoon": 1
+  },
+  "objects_match": true,
+  "prompt": "Close-up overhead photo of a light wooden tabletop that fills the entire frame from edge to edge; only the tabletop surface is visible, no table edge, floor or furniture.\n\nA perfectly top-down, 90-degree bird's-eye view of a table, with the camera positioned directly above it, facing straight down.\n\nExactly four objects must be visible on the tabletop:\n\nOne plate, positioned centrally.\n\nOne fork, placed immediately to the left of the plate, vertical.\n\nOne knife, placed immediately to the right of the plate, vertical.\n\nOne spoon, placed to the right of the knife, vertical.\n\nAll four objects must be clearly visible, fully inside the frame, and spatially separated. The fork, knife, and spoon should be arranged parallel to each other, with their handles oriented in the same direction.\n\nStrict object constraint: The plate, fork, knife, and spoon are the ONLY objects in the entire image. No additional items, utensils, cutlery, food, decorations, hands, people, or background objects. No text or labels.\n\n Clean, uncluttered composition, with the table as the only background. The tabletop is a light wooden surface, filling the entire image from edge to edge with no table edge, floor, or furniture visible.",
+  "target_image": "outputs\\table2_zimage_seed838632245_target.png"
+}
