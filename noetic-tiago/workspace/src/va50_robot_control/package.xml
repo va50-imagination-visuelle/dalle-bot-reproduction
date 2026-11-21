@@ -54,20 +54,32 @@
   <build_depend>moveit_commander</build_depend>
   <build_depend>moveit_msgs</build_depend>
   <build_depend>rospy</build_depend>
+  <build_depend>sensor_msgs</build_depend>
   <build_depend>tf</build_depend>
+  <build_depend>tf2_geometry_msgs</build_depend>
+  <build_depend>tf2_ros</build_depend>
+  <build_depend>trajectory_msgs</build_depend>
   <build_export_depend>gazebo_msgs</build_export_depend>
   <build_export_depend>geometry_msgs</build_export_depend>
   <build_export_depend>moveit_commander</build_export_depend>
   <build_export_depend>moveit_msgs</build_export_depend>
   <build_export_depend>rospy</build_export_depend>
+  <build_export_depend>sensor_msgs</build_export_depend>
   <build_export_depend>tf</build_export_depend>
+  <build_export_depend>tf2_geometry_msgs</build_export_depend>
+  <build_export_depend>tf2_ros</build_export_depend>
+  <build_export_depend>trajectory_msgs</build_export_depend>
   <exec_depend>gazebo_msgs</exec_depend>
   <exec_depend>geometry_msgs</exec_depend>
   <exec_depend>moveit_commander</exec_depend>
   <exec_depend>moveit_msgs</exec_depend>
   <exec_depend>rospy</exec_depend>
   <exec_depend>rospkg</exec_depend>
+  <exec_depend>sensor_msgs</exec_depend>
   <exec_depend>tf</exec_depend>
+  <exec_depend>tf2_geometry_msgs</exec_depend>
+  <exec_depend>tf2_ros</exec_depend>
+  <exec_depend>trajectory_msgs</exec_depend>
 
 
   <!-- The export tag contains other, unspecified, tags -->

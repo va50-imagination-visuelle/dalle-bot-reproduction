@@ -135,6 +135,130 @@ Cible atteinte dans les tolérances définies.
 La trajectoire a donc été planifiée, exécutée par `arm_controller` et validée
 par une nouvelle lecture de la pose de `arm_tool_link`.
 
+## Pré-préhension et saisie physique de la fourche
+
+Le script `plan_fork_pregrasp.py` propose quatre modes :
+
+```bash
+# Planifier et publier dans RViz, sans mouvement.
+rosrun va50_robot_control plan_fork_pregrasp.py
+
+# Exécuter seulement la trajectoire de pré-préhension.
+rosrun va50_robot_control plan_fork_pregrasp.py --execute
+
+# Ouvrir la pince, approcher, descendre, fermer puis tester le levage.
+rosrun va50_robot_control plan_fork_pregrasp.py --grasp
+
+# Saisir, transporter et déposer la fourche sur la même table.
+rosrun va50_robot_control plan_fork_pregrasp.py --pick-place
+```
+
+Le mode `--grasp` conserve une approche haute à 13 cm afin que les longs doigts
+ne balaient pas la table pendant le mouvement latéral. Il descend ensuite
+verticalement de 4 cm, commande les deux doigts vers leur position fermée,
+attache la géométrie de la fourche à la scène MoveIt puis remonte de 8 cm. La
+réussite est décidée à partir du déplacement réel de la fourche retourné par
+Gazebo, et non uniquement à partir de la trajectoire théorique.
+
+Lors du test du 30 octobre 2026, les doigts se sont immobilisés à 7,9 mm et
+11,8 mm avec environ 16 N d'effort chacun. La fourche s'est élevée de 41,3 mm
+et sa hauteur est restée stable cinq secondes après le mouvement. Cela valide
+une saisie par contact physique dans Gazebo, sans plugin d'attachement.
+
+## Premier Pick & Place dans Gazebo
+
+Compiler et lancer la simulation comme dans la procédure ci-dessus. Attendre
+le message `Simulation running.` et la fin du mouvement d'initialisation du
+bras avant d'exécuter les commandes suivantes dans un second terminal du
+conteneur :
+
+```bash
+cd /home/pal/ros_ws
+source /opt/pal/gallium/setup.bash
+source devel/setup.bash --extend
+rosrun va50_robot_control plan_fork_pregrasp.py --pose-source gazebo
+rosrun va50_robot_control plan_fork_pregrasp.py --pose-source gazebo --pick-place
+```
+
+La première commande publie la trajectoire d'approche dans RViz. La deuxième
+mesure la pose initiale de la fourche dans Gazebo. La cible de dépôt conserve
+sa hauteur et son orientation initiales et la décale de **8 cm sur +Y** dans
+`base_footprint`. Pour choisir un autre décalage en mètres, ajouter
+`--place-offset DX DY`. Le programme vérifie que le décalage dépasse 4 cm et
+que les coins de la boîte de la fourche restent à au moins 2 cm des bords.
+Utiliser une zone libre de la table. Le scénario de référence emploie la scène
+initiale VA50 et Gazebo fournit les poses connues sans entrée caméra.
+
+Après la saisie et le levage, MoveIt déplace la pince fermée au-dessus de la
+cible en conservant l'orientation de prise. Gazebo vérifie que la fourche a
+suivi le déplacement. La pince descend, relâche la fourche à environ 1 cm de
+sa hauteur de repos, puis se retire. MoveIt détache la boîte de collision de
+l'effecteur et la réinsère à la position mesurée. La fourche se déplace par
+contact dans Gazebo.
+
+Le succès exige une pose stable après deux secondes et une erreur finale de
+**20 mm maximum** en position et **0,15 rad maximum** en orientation. Le
+programme renvoie un code non nul si une étape échoue et indique l'étape
+concernée. Relancer la scène initiale avant de répéter le scénario de
+référence, car la cible se calcule depuis la pose courante de la fourche.
+
+Validation depuis une scène redémarrée, avec le décalage par défaut :
+
+| Mesure | Résultat |
+|---|---:|
+| Levage physique de la fourche | 52,1 mm |
+| Trajectoires cartésiennes de transfert, descente et retrait | 100 % chacune |
+| Erreur finale de position | 16,1 mm |
+| Erreur finale d'orientation | 0,0018 rad |
+| Résultat du script | `Fork pick and place succeeded.` (code 0) |
+
+## Interface entre perception et préhension
+
+Le planificateur accepte deux sources pour la pose de la fourche :
+
+```bash
+# Vérité terrain Gazebo, utilisée pour les tests et régressions.
+rosrun va50_robot_control plan_fork_pregrasp.py --pose-source gazebo
+
+# Pose estimée par le pipeline de perception.
+rosrun va50_robot_control plan_fork_pregrasp.py --pose-source perception
+```
+
+Le contrat d'entrée du mode perception est :
+
+| Champ | Contrat |
+|---|---|
+| Topic par défaut | `/perception/fork/pose` |
+| Type ROS | `geometry_msgs/PoseStamped` |
+| Position | centre 3D de la fourche |
+| `frame_id` | repère connu de TF, par exemple le repère optique de la caméra |
+| Horodatage | date de l'image RGB-D utilisée pour l'estimation |
+| Orientation | axes de l'objet définis ci-dessous |
+
+La convention d'orientation est déterminante : `+Y` doit aller du manche vers
+les dents, `+X` traverse la largeur de la fourche et `+Z` suit la normale de la
+table. Le planificateur place le point de saisie à `-6 cm` sur l'axe local Y.
+Une orientation retournée de 180 degrés enverrait donc la pince vers les dents.
+La perception doit lever l'ambiguïté de l'axe PCA en identifiant l'extrémité du
+manche.
+
+Le planificateur refuse une pose sans `frame_id`, trop ancienne, datée dans le
+futur, contenant une valeur non finie ou un quaternion nul. Il normalise le
+quaternion puis utilise TF pour convertir la pose vers `base_footprint`. Les
+options de réglage sont :
+
+```text
+--fork-pose-topic /perception/fork/pose
+--perception-timeout 10.0
+--max-pose-age 1.0
+```
+
+Une fois la pose reçue, les modes de sécurité restent identiques : aucune
+commande sans option, pré-préhension avec `--execute`, et saisie complète avec
+`--grasp`. Pendant les essais en simulation, Gazebo reste utilisé uniquement
+pour la table, la physique et la vérification indépendante du déplacement de la
+fourche; il n'est plus la source de la cible en mode perception.
+
 ## Échecs attendus et diagnostic
 
 Le script retourne un code non nul dans les cas suivants :
@@ -160,7 +284,8 @@ groupe `arm` par `arm_torso`.
 - [`move_to_pose.py`](../../workspace/src/va50_robot_control/script/move_to_pose.py)
   est l'exemple minimal d'exécution du projet.
 - [`plan_fork_pregrasp.py`](../../workspace/src/va50_robot_control/script/plan_fork_pregrasp.py)
-  est un exemple plus avancé de scène de collision, validation IK/FK et
-  publication dans RViz; il ne déclenche volontairement aucun mouvement.
+  est un exemple plus avancé de scène de collision, validation IK/FK,
+  publication dans RViz et saisie physique optionnelle. Il reste en mode
+  planification seule tant que `--execute` ou `--grasp` n'est pas fourni.
 - Le [manuel TIAGo de PAL Robotics](https://docs.pal-robotics.com/tiago-single/handbook.html)
   complète les informations propres au robot.

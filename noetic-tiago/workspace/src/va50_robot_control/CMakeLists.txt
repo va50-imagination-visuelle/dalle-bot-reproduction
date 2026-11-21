@@ -13,7 +13,11 @@ find_package(catkin REQUIRED COMPONENTS
   moveit_commander
   moveit_msgs
   rospy
+  sensor_msgs
   tf
+  tf2_geometry_msgs
+  tf2_ros
+  trajectory_msgs
 )
 
 ## System dependencies are found with CMake's conventions
@@ -108,7 +112,7 @@ find_package(catkin REQUIRED COMPONENTS
 catkin_package(
 #  INCLUDE_DIRS include
 #  LIBRARIES va50_robot_control
-  CATKIN_DEPENDS gazebo_msgs geometry_msgs moveit_commander moveit_msgs rospy tf
+  CATKIN_DEPENDS gazebo_msgs geometry_msgs moveit_commander moveit_msgs rospy sensor_msgs tf tf2_geometry_msgs tf2_ros trajectory_msgs
 )
 
 ###########
